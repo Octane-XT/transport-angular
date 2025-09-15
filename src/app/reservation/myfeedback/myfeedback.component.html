@@ -1,0 +1,86 @@
+<div class="messages" *ngIf="reports.length > 0">
+  <mat-accordion>
+    <mat-expansion-panel
+      *ngFor="let report of reports"
+      (opened)="onPanelOpened(report)"
+    >
+      <mat-expansion-panel-header>
+        <div>
+          {{ report.axe_libelle }} - {{ report.heuretransport_heure }} -
+          {{ report.transportuser_date | date : "yyyy-MM-dd" }} -
+          {{ report.transportuser_quartier }}
+        </div>
+      </mat-expansion-panel-header>
+
+      <div class="message-content">
+        <div class="report-detail" style="margin-bottom: 15px">
+          <div>
+            <p>
+              <strong>Heure Arrivée:</strong>
+              {{ report.transportuser_heurearrive }}
+            </p>
+            <!-- <p>
+              <strong>Description:</strong>
+              {{ report.transportuser_description }}
+            </p> -->
+          </div>
+        </div>
+        <div class="comment-container">
+          <!-- Comment Bubble -->
+          <div
+            class="comment-bubble"
+            *ngFor="let comment of comments"
+            style="background-color: #607d8b"
+          >
+            <div class="username">
+              {{ comment.usr_nom }} {{ comment.usr_prenom }}
+              {{ comment.usr_username }}
+            </div>
+            <div class="comment">{{ comment.commentaire }}</div>
+            <div class="date">
+              {{ comment.date | date : "yyyy-MM-dd" }}
+            </div>
+          </div>
+
+          <div
+            class="add-comment"
+            style="width: 100%"
+            *ngIf="countComment == 0"
+          >
+            <p style="color: red">
+              Vous ne pouvez commenter que 1 fois par jour.
+            </p>
+
+            <mat-form-field
+              class="message-input"
+              appearance="outline"
+              style="width: 100%"
+            >
+              <textarea
+                matInput
+                [(ngModel)]="newComment"
+                placeholder=""
+              ></textarea>
+              <button mat-icon-button matSuffix (click)="addComment(report)">
+                <mat-icon>send</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+          <div class="add-comment" style="width: 100%" *ngIf="countComment > 0">
+            <p style="color: red">
+              Limite commentaire atteint, veuillez réessayer à demain.
+            </p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<div class="messages" *ngIf="reports.length === 0">
+  <div class="message-bubble">
+    <div class="message-info">
+      <h6>Vous trouverez ici les réclamations que vous avez faites</h6>
+    </div>
+  </div>
+</div>

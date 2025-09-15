@@ -1,0 +1,140 @@
+<mat-card class="mat-card p-3" appearance="outlined">
+  <mat-card-header style="display: flex; align-items: center; justify-content: space-between; margin-top: -25px;">
+    <mat-card-title style="width: 400px; display: flex; align-items: center">
+      Localisations des agents
+    </mat-card-title>
+
+    <div class="search-container">
+      <button mat-icon-button color="black" (click)="refresh()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-icon-button color="black" [matMenuTriggerFor]="menuExport">
+        <mat-icon>upload_file</mat-icon>
+      </button>
+      <mat-menu #menuExport="matMenu">
+        <button mat-menu-item (click)="exportToExcel()">
+          <span>Exporter en Excel</span>
+        </button>
+      </mat-menu>
+      <button mat-icon-button color="black" [matMenuTriggerFor]="menu" style="margin-right: 15px" (click)="loadFilterData()">
+        <mat-icon>filter_alt</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" class="p-2">
+        <mat-form-field appearance="outline" (click)="$event.stopPropagation()" style="width: 100%">
+          <mat-label>Plage de dates</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Date début" [(ngModel)]="startDate" />
+            <input matEndDate placeholder="Date fin" [(ngModel)]="endDate" />
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" (click)="$event.stopPropagation()" style="width: 100%">
+          <mat-label>Axe</mat-label>
+          <mat-select [(ngModel)]="selectedAxe">
+            <mat-option *ngFor="let axe of Listaxe" [value]="axe">
+              {{ axe.axe_libelle }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-flat-button style="background-color: black" (click)="onFilterApply()">
+          Valider
+        </button>
+      </mat-menu>
+    </div>
+
+    <div style="margin-top: 25px">
+      <mat-form-field appearance="outline">
+        <mat-label>Recherche</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </mat-card-header>
+
+  <div class="mat-card-content">
+    <table *ngIf="!isLoading" mat-table [dataSource]="dataSource" class="mat-table" appearance="outlined">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}">{{ element.id }}</td>
+      </ng-container>
+      <ng-container matColumnDef="usr_nom">
+        <th mat-header-cell *matHeaderCellDef>Nom</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}">{{ element.usr_nom }}</td>
+      </ng-container>
+      <ng-container matColumnDef="usr_prenom">
+        <th mat-header-cell *matHeaderCellDef>Prénom</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}">{{ element.usr_prenom }}</td>
+      </ng-container>
+      <ng-container matColumnDef="loc_descente">
+        <th mat-header-cell *matHeaderCellDef>Localisation GPS</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}">
+          <a [href]="getGoogleMapsLink(element.loc_descente)" target="_blank" class="google-maps-btn">{{ element.loc_descente || 'Coordonnées invalides' }} </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="axe">
+        <th mat-header-cell *matHeaderCellDef>Axe</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}">{{ element.axe }}</td>
+      </ng-container>
+      <ng-container matColumnDef="axe_id">
+        <th mat-header-cell *matHeaderCellDef>Axe ID</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}">{{ element.axe_id }}</td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}">{{ element.date | date: 'dd/MM/yyyy' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="heure_montee">
+        <th mat-header-cell *matHeaderCellDef>Heure Montée</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}">{{ formatTime(element.heure_montee) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="heure_descente">
+        <th mat-header-cell *matHeaderCellDef>Heure Descente</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}"> {{ formatTime(element.heure_descente) }} </td>
+      </ng-container>
+      <ng-container matColumnDef="usr_matricule">
+        <th mat-header-cell *matHeaderCellDef>Matricule</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}">{{ element.usr_matricule }}</td>
+      </ng-container>
+      <ng-container matColumnDef="usr_initiale">
+        <th mat-header-cell *matHeaderCellDef>Initiale</th>
+        <td mat-cell *matCellDef="let element" class="{{ element.color }}">{{ element.usr_initiale }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element" style="width: 150px">
+          <button
+            mat-icon-button
+            (click)="editLocation(element)"
+            [ngStyle]="{ color: element.id === null ? '#8080806b' : '#00447c' }"
+            [disabled]="element.id === null"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="openConfirmationDialog(element)"
+            style="color: #db2a48"
+          > 
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <div *ngIf="isLoading" class="overlay">
+      <mat-spinner class="orange-spinner"></mat-spinner>
+    </div>
+
+    <mat-paginator
+      [length]="dataSource.data.length"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="dataSource.paginator = paginator"
+    ></mat-paginator>
+  </div>
+</mat-card>

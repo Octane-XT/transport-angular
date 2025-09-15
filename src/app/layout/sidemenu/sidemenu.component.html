@@ -1,0 +1,70 @@
+<div style="width: 100%">
+  <mat-toolbar style="background-color: #33a8ff">
+    <!-- Toolbar content -->
+  </mat-toolbar>
+
+  <div
+    class="d-flex flex-column gap-1 col overflow-y-auto"
+    style="flex: 1; height: 100vh; overflow: auto; padding: 5px"
+  >
+    <!-- Loop over categories and create a panel for each -->
+    <div *ngFor="let group of items; let i = index">
+      <mat-expansion-panel
+        appearance="outline"
+        [expanded]="expandedPanels[i]"
+        (opened)="togglePanel(i)"
+        (closed)="togglePanel(i)"
+        [hideToggle]="close"
+      >
+        <mat-expansion-panel-header>
+          <div class="icon-text-container">
+            <mat-icon>{{ group.icon }}</mat-icon>
+            <span *ngIf="!close">{{ group.category }}</span>
+          </div>
+        </mat-expansion-panel-header>
+
+        <div>
+          <div *ngFor="let child of group.items">
+            <!-- Reclamation Item with Notification Badge (No icon) -->
+            <a
+              *ngIf="child.label === 'Reclamation'"
+              [routerLink]="child.routerLink"
+              routerLinkActive="actived"
+              class="list-group-item list-group-item-action py-2 lh-tight"
+              aria-current="page"
+            >
+              <div class="icon-text-container">
+                <span *ngIf="!close" style="margin-left: 15px">
+                  {{ child.label }}
+                </span>
+                <!-- Conditionally show the notification badge if notificationCount > 0 -->
+                <span
+                  *ngIf="child.notificationCount > 0"
+                  matBadge="{{ child.notificationCount }}"
+                  matBadgeColor="warn"
+                  matBadgePosition="above after"
+                  class="notification-badge"
+                ></span>
+              </div>
+            </a>
+
+            <!-- Other Menu Items -->
+            <a
+              *ngIf="child.label !== 'Reclamation'"
+              [routerLink]="child.routerLink"
+              routerLinkActive="actived"
+              class="list-group-item list-group-item-action py-2 lh-tight"
+              aria-current="page"
+            >
+              <div class="icon-text-container">
+                <span *ngIf="!close" style="margin-left: 15px">
+                  {{ child.label }}
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </div>
+  </div>
+</div>

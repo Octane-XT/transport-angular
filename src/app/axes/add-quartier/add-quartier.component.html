@@ -1,0 +1,68 @@
+<div
+  class="d-flex align-items-center px-3"
+  style="background-color: #393e46; height: 60px; width: 100%; flex-shrink: 0"
+>
+  <h5 class="m-0 text-white">Ajout des quartiers</h5>
+  <button (click)="closeDialog()" class="close-button">
+    <mat-icon style="color: white">close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Quartiers</mat-label>
+    <mat-chip-grid
+      #chipGrid
+      aria-label="Quartier selection"
+      class="example-chip-list"
+    >
+      <mat-chip-row
+        *ngFor="let quartier of selectedQuartiers"
+        (removed)="removeQuartier(quartier)"
+      >
+        {{ quartier.quartier_libelle }}
+        <button
+          matChipRemove
+          [attr.aria-label]="'Remove ' + quartier.quartier_libelle"
+        >
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+    </mat-chip-grid>
+
+    <input
+      placeholder="Add quartier..."
+      #quartierInput
+      [(ngModel)]="currentQuartier"
+      [matChipInputFor]="chipGrid"
+      [matAutocomplete]="auto"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="addQuartier($event)"
+    />
+
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      (optionSelected)="onQuartierSelected($event)"
+    >
+      <mat-option
+        *ngFor="let quartier of filteredQuartiers()"
+        [value]="quartier"
+      >
+        {{ quartier.quartier_libelle }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-stroked-button (click)="onCancel()" style="color: black">
+    Annuler
+  </button>
+  <button
+    mat-stroked-button
+    (click)="onSave()"
+    style="background-color: #393e46; color: white"
+  >
+    Modifier
+  </button>
+</mat-dialog-actions>

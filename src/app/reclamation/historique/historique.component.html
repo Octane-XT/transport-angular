@@ -1,0 +1,94 @@
+<div
+  class="d-flex align-items-center px-3"
+  style="background-color: #393e46; height: 60px; width: 100%; flex-shrink: 0"
+>
+  <h5 class="m-0 text-white">Historique</h5>
+  <button (click)="closeDialog()" class="close-button">
+    <mat-icon style="color: white">close</mat-icon>
+  </button>
+</div>
+
+<div class="p-3">
+  <div class="filters" style="width: 600px">
+    <!-- Filter for Month -->
+    <mat-form-field appearance="outline">
+      <mat-label>Mois</mat-label>
+      <mat-select [(value)]="selectedMonth" (selectionChange)="filterReports()">
+        <mat-option *ngFor="let month of months" [value]="month.value">
+          {{ month.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Filter for Year -->
+    <mat-form-field appearance="outline" style="margin-left: 15px">
+      <mat-label>Année</mat-label>
+      <mat-select [(value)]="selectedYear" (selectionChange)="filterReports()">
+        <mat-option *ngFor="let year of years" [value]="year">{{
+          year
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Reports Table -->
+  <div *ngIf="reports.length > 0">
+    <table mat-table [dataSource]="dataSource">
+      <!-- Collapsible Comments Section -->
+      <ng-container matColumnDef="comments">
+        <th mat-header-cell *matHeaderCellDef>Historiques des reclamations</th>
+        <td mat-cell *matCellDef="let report">
+          <mat-expansion-panel
+            [(expanded)]="report.isExpanded"
+            (opened)="onPanelOpened(report)"
+            (closed)="onPanelClosed(report)"
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ report.axe_libelle }} - {{ report.heuretransport_heure }} -
+                {{ report.transportuser_date | date : "yyyy-MM-dd" }} -
+                {{ report.transportuser_quartier }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <!-- Comments Displayed Inside the Expansion Panel -->
+            <div *ngIf="report.isExpanded && report.comments?.length">
+              <div
+                *ngFor="let comment of report.comments"
+                class="comment-bubble"
+              >
+                <div class="username">
+                  {{ comment.usr_nom }} {{ comment.usr_prenom }} ({{
+                    comment.usr_username
+                  }})
+                </div>
+                <div class="comment">{{ comment.commentaire }}</div>
+                <div class="date">{{ comment.date | date : "yyyy-MM-dd" }}</div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <!-- Pagination Controls -->
+    <mat-paginator
+      [length]="filteredReports.length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="pageEvent($event)"
+    >
+    </mat-paginator>
+  </div>
+
+  <div *ngIf="reports.length === 0">
+    <div class="message-bubble">
+      <div class="message-info">
+        <h6>Vous trouverez ici les historiques des réclamations</h6>
+      </div>
+    </div>
+  </div>
+</div>

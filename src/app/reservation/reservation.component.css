@@ -1,0 +1,11 @@
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+mat-form-field {
+  flex: 1;
+  min-width: 150px;
+}

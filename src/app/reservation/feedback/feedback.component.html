@@ -1,0 +1,31 @@
+<div
+  class="d-flex align-items-center px-3"
+  style="background-color: #393e46; height: 60px; width: 100%; flex-shrink: 0"
+>
+  <h5 class="m-0 text-white">Reclamation</h5>
+</div>
+
+<div class="p-3">
+  <mat-form-field appearance="outline">
+    <mat-label>Type de plainte</mat-label>
+    <mat-select [(value)]="selectedComplaintType">
+      <mat-option *ngFor="let type of complaintTypes" [value]="type.id">{{
+        type.nom
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Heure d'arrivée</mat-label>
+    <input matInput type="time" [(ngModel)]="arrivalTime" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea matInput [(ngModel)]="description" rows="5"></textarea>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="onSubmit()">
+    Soumettre
+  </button>
+</div>

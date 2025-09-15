@@ -1,0 +1,10 @@
+.sidecontent {
+  width: 100%;
+  height: 100vh;
+}
+
+.content {
+  padding: 10px;
+  height: 88%;
+  overflow: auto;
+}

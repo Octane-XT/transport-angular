@@ -1,0 +1,111 @@
+<mat-card class="mat-card p-3" appearance="outlined">
+  <mat-card-header
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: -25px;
+    "
+  >
+    <mat-card-title style="width: 400px; display: flex; align-items: center">
+      Gestion des axes
+    </mat-card-title>
+
+    <div class="search-container" style="margin-right: 15px">
+      <button mat-icon-button color="black" (click)="exportToExcel()">
+        <mat-icon>upload_file</mat-icon>
+      </button>
+      <button mat-icon-button color="black" (click)="assignationAxe()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
+    <div style="margin-top: 25px">
+      <mat-form-field appearance="outline">
+        <mat-label>Recherche</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Recherche" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </mat-card-header>
+
+  <!-- Table Container -->
+  <div class="mat-card-content">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-table"
+      appearance="outlined"
+      *ngIf="!isLoading"
+    >
+      <!-- Heure Column -->
+      <ng-container matColumnDef="heure">
+        <th mat-header-cell *matHeaderCellDef>Heure</th>
+        <td mat-cell *matCellDef="let element" style="width: 150px">
+          {{ element.heuretransport_heure }}
+        </td>
+      </ng-container>
+
+      <!-- Axe Column -->
+      <ng-container matColumnDef="axe">
+        <th mat-header-cell *matHeaderCellDef>Axe</th>
+        <td mat-cell *matCellDef="let element" style="width: 250px">
+          {{ element.axe_libelle }}
+        </td>
+      </ng-container>
+
+      <!-- Quartiers Column -->
+      <ng-container matColumnDef="quartiers">
+        <th mat-header-cell *matHeaderCellDef>Quartiers</th>
+        <td mat-cell *matCellDef="let element">
+          {{ addSpaceAfterComma(element.quartier_libelle) }}
+        </td>
+      </ng-container>
+
+      <!-- Car Column -->
+      <ng-container matColumnDef="car">
+        <th mat-header-cell *matHeaderCellDef>Car</th>
+        <td mat-cell *matCellDef="let element" style="width: 150px">
+          {{ element.heureaxe_car }}
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element" style="width: 150px">
+          <button
+            mat-icon-button
+            (click)="addQuartier(element)"
+            style="color: rgb(0, 68, 124)"
+          >
+            <mat-icon>add_location_alt</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="openConfirmationDialog(element)"
+            style="color: rgb(219, 42, 72)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <div *ngIf="isLoading" class="overlay">
+      <mat-spinner class="orange-spinner"></mat-spinner>
+    </div>
+
+    <!-- Pagination -->
+    <mat-paginator
+      [length]="listaxequartier.length"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="dataSource.paginator = paginator"
+    ></mat-paginator>
+  </div>
+</mat-card>

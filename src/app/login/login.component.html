@@ -1,0 +1,56 @@
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <mat-card appearance="outlined" class="p-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-center mb-4">
+        <img
+          src="transport-logo-removebg-preview.png"
+          alt="Transport Logo"
+          style="max-width: 250px"
+        />
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          style="width: 100%; margin-bottom: 10px"
+        >
+          <mat-label>Matricule</mat-label>
+          <input matInput formControlName="matricule" type="text" />
+          <mat-error *ngIf="loginForm.get('matricule')?.hasError('required')">
+            Matricule is required.
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('matricule')?.hasError('matricule')">
+            Please enter a valid matricule.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          style="width: 100%; margin-bottom: 10px"
+        >
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" />
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            Password is required.
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+            Password must be at least 6 characters long.
+          </mat-error>
+        </mat-form-field>
+
+        <div class="d-flex justify-content-center mt-3">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="loginForm.invalid"
+          >
+            Login
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</div>

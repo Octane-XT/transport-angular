@@ -1,0 +1,182 @@
+.overlay {
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  /* Ensure it is on top */
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+.chat-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Chat title */
+.chat-title {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Filters (placed at the top) */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+}
+
+/* Each filter form field */
+mat-form-field {
+  flex: 1 1 200px;
+  margin-bottom: 20px;
+}
+
+button.mark-read-btn {
+  margin-top: 20px;
+  align-self: center;
+}
+
+/* Messages (chat bubbles) */
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+/* Each message bubble */
+.message-bubble {
+  display: flex;
+  flex-direction: column;
+  background: #e1f5fe;
+  padding: 15px;
+  border-radius: 15px;
+  max-width: 100%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  position: relative;
+  word-wrap: break-word;
+}
+
+/* Message info (sender and time) */
+.message-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.sender {
+  font-weight: bold;
+}
+
+.message-time {
+  color: #888;
+}
+
+/* Message content (the main message body) */
+.message-content p {
+  margin: 5px 0;
+}
+
+.message-content strong {
+  color: #333;
+}
+
+/* Message Input Box (optional for future expansion) */
+.message-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+textarea {
+  width: 80%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  resize: none;
+}
+
+/* Adjust styles for mat-expansion-panel */
+mat-expansion-panel {
+  margin-bottom: 15px;
+  background-color: #e1f5fe;
+}
+
+mat-expansion-panel-header {
+  padding: 15px;
+  background-color: #e1f5fe;
+}
+
+.message-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.sender {
+  font-weight: bold;
+}
+
+.message-time {
+  color: #888;
+}
+
+.message-content p {
+  margin: 5px 0;
+}
+
+.message-content strong {
+  color: #333;
+}
+
+.comment-bubble {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: #009688;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+}
+
+.comment-bubble .username {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.comment-bubble .date {
+  font-size: 12px;
+  color: #ddd;
+}
+
+.comment-bubble .comment {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.comment-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}

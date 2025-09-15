@@ -1,0 +1,30 @@
+<mat-toolbar style="background-color: #33a8ff" class="fixed-topmenu">
+  <button
+    mat-icon-button
+    class="example-icon"
+    aria-label="Example icon-button with menu icon"
+    (click)="changeEtat.emit()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span class="example-spacer"></span>
+
+  <button
+    mat-button
+    [matMenuTriggerFor]="menu"
+    aria-label="Example icon-button with a menu"
+  >
+    <mat-icon>person</mat-icon>
+    Profile
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="myquartier()">
+      <mat-icon>holiday_village</mat-icon>
+      <span>Definir mon quartier</span>
+    </button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Deconnexion</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

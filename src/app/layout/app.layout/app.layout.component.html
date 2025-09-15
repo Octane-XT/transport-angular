@@ -1,0 +1,17 @@
+<div class="card">
+  <div class="d-flex flex-row" style="background-color: #eeeeee">
+    <app-sidemenu
+      class="flex col-2"
+      [close]="close"
+      [@sideMenuWidth]="close ? 'closed' : 'open'"
+      style="background-color: rgb(250, 249, 253)"
+    ></app-sidemenu>
+
+    <div class="sidecontent" style="background-color: #eeeeee; height: 100%">
+      <app-topmenu [close]="close" (changeEtat)="changeEtat()"></app-topmenu>
+      <main class="content">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </div>
+</div>

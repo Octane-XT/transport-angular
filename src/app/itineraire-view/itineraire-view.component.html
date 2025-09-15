@@ -1,0 +1,101 @@
+<mat-card class="mat-card p-3" appearance="outlined">
+  <mat-card-header style="display: flex; align-items: center; justify-content: space-between; margin-top: -25px;">
+    <mat-card-title style="width: 400px; display: flex; align-items: center">
+      Itinéraires des trajets
+    </mat-card-title>
+
+    <div class="search-container">
+      <button mat-icon-button color="black" (click)="refresh()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-icon-button color="black" [matMenuTriggerFor]="menuExport">
+        <mat-icon>upload_file</mat-icon>
+      </button>
+      <mat-menu #menuExport="matMenu">
+        <button mat-menu-item (click)="exportToExcel()">
+          <span>Exporter en Excel</span>
+        </button>
+      </mat-menu>
+      <button mat-icon-button color="black" [matMenuTriggerFor]="menu" style="margin-right: 15px" (click)="loadFilterData()">
+        <mat-icon>filter_alt</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" class="p-2">
+        <mat-form-field appearance="outline" (click)="$event.stopPropagation()" style="width: 100%">
+          <mat-label>Plage de dates</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Date début" [(ngModel)]="startDate" />
+            <input matEndDate placeholder="Date fin" [(ngModel)]="endDate" />
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" (click)="$event.stopPropagation()" style="width: 100%">
+          <mat-label>Axe</mat-label>
+          <mat-select [(ngModel)]="selectedAxe">
+            <mat-option *ngFor="let axe of axes" [value]="axe">
+              {{ axe.axe_libelle }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-flat-button style="background-color: black" (click)="onFilterApply()">
+          Valider
+        </button>
+      </mat-menu>
+    </div>
+
+    <div style="margin-top: 25px">
+      <mat-form-field appearance="outline">
+        <mat-label>Recherche</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </mat-card-header>
+
+  <div class="mat-card-content">
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+    <div *ngIf="dataSource.data.length === 0 && !isLoading && !error" class="no-data">
+      Aucune donnée à afficher
+    </div>
+    <table *ngIf="!isLoading && dataSource.data.length > 0" mat-table [dataSource]="dataSource" class="mat-table" appearance="outlined">
+      <ng-container matColumnDef="axe">
+        <th mat-header-cell *matHeaderCellDef>Axe</th>
+        <td mat-cell *matCellDef="let element">{{ element.axe }}</td>
+      </ng-container>
+      <ng-container matColumnDef="heure_montee">
+        <th mat-header-cell *matHeaderCellDef>Heure axe</th>
+        <td mat-cell *matCellDef="let element">{{ element.heure_montee }}</td>
+      </ng-container>
+      <ng-container matColumnDef="duree_trajet">
+        <th mat-header-cell *matHeaderCellDef>Durée</th>
+        <td mat-cell *matCellDef="let element">{{ formatDuration(element.duree_trajet) }} </td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.date | date: 'dd/MM/yyyy' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="mapsUrl">
+        <th mat-header-cell *matHeaderCellDef>Itinéraire</th>
+        <td mat-cell *matCellDef="let element">
+          <a [href]="element.mapsUrl && !element.mapsUrl.includes('0,0') && element.mapsUrl.includes(',') ? element.mapsUrl : 'https://www.google.com/maps'" target="_blank" class="google-maps-btn">
+            {{ element.mapsUrl && !element.mapsUrl.includes('0,0') && element.mapsUrl.includes(',') ? 'Voir itinéraire' : 'Itinéraire indisponible' }}
+          </a>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <div *ngIf="isLoading" class="overlay">
+      <mat-spinner class="orange-spinner"></mat-spinner>
+    </div>
+
+    <mat-paginator
+      [length]="dataSource.data.length"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="dataSource.paginator = paginator"
+    ></mat-paginator>
+  </div>
+</mat-card>

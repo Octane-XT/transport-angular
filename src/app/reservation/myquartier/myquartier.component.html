@@ -1,0 +1,50 @@
+<div
+  class="d-flex align-items-center px-3"
+  style="background-color: #393e46; height: 60px; width: 100%; flex-shrink: 0"
+>
+  <h5 class="m-0 text-white">Mon quartier</h5>
+  <button (click)="closeDialog()" class="close-button">
+    <mat-icon style="color: white">close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <h6 *ngIf="myquartier">
+    Vous avez déjà défini votre quartier :
+    <strong>{{ myquartier.quartier_libelle }}</strong>
+  </h6>
+  <mat-form-field appearance="outline" style="width: 100%" *ngIf="!myquartier">
+    <mat-label>Quartier</mat-label>
+    <input
+      type="text"
+      matInput
+      [matAutocomplete]="typeSelection1"
+      (input)="filterQuartier()"
+      (focus)="filterQuartier()"
+      [(ngModel)]="selectedQuartier"
+      #quartierInput
+    />
+    <mat-autocomplete
+      requireSelection
+      #typeSelection1="matAutocomplete"
+      (optionSelected)="onQuartierSelected($event)"
+      [displayWith]="displayQuartier"
+    >
+      <mat-option *ngFor="let quartier of filteredQuartier" [value]="quartier">
+        {{ quartier.quartier_libelle }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions *ngIf="!myquartier">
+  <button mat-stroked-button (click)="onCancel()" style="color: black">
+    Annuler
+  </button>
+  <button
+    mat-stroked-button
+    (click)="onSave()"
+    style="background-color: #393e46; color: white"
+  >
+    Definir
+  </button>
+</mat-dialog-actions>

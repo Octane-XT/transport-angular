@@ -1,0 +1,148 @@
+<div class="chat-container">
+  <mat-card appearance="outlined">
+    <!-- Expansion Panel for Filters -->
+    <mat-expansion-panel expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title> Filtrer les reclamations </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="filters">
+        <!-- Axe Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Axe</mat-label>
+          <mat-select
+            [(ngModel)]="selectedAxeId"
+            (selectionChange)="filterReports()"
+          >
+            <mat-option [value]="null">All</mat-option>
+            <mat-option *ngFor="let report of reports" [value]="report.axe_id">
+              {{ report.axe_libelle }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Heure Transport Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Heure Transport</mat-label>
+          <mat-select
+            [(ngModel)]="selectedHeureTransportId"
+            (selectionChange)="filterReports()"
+          >
+            <mat-option [value]="null">All</mat-option>
+            <mat-option
+              *ngFor="let report of reports"
+              [value]="report.heuretransport_id"
+            >
+              {{ report.heuretransport_heure }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Date Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [(ngModel)]="selectedDate"
+            (ngModelChange)="filterReports()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+  </mat-card>
+  <!-- Chat Messages (Reports as Message Bubbles) -->
+  <div class="messages" *ngIf="reports.length > 0">
+    <mat-accordion>
+      <mat-expansion-panel
+        *ngFor="let report of reports"
+        (opened)="onPanelOpened(report)"
+      >
+        <mat-expansion-panel-header>
+          <div>
+            {{ report.axe_libelle }} - {{ report.heuretransport_heure }} -
+            {{ report.transportuser_date | date : "yyyy-MM-dd" }} -
+            {{ report.transportuser_quartier }}
+          </div>
+        </mat-expansion-panel-header>
+
+        <div class="message-content">
+          <div class="report-detail" style="margin-bottom: 15px">
+            <div>
+              <p>
+                <strong>Heure Arrivée:</strong>
+                {{ report.transportuser_heurearrive }}
+              </p>
+              <!-- <p>
+                <strong>Description:</strong>
+                {{ report.transportuser_description }}
+              </p> -->
+            </div>
+          </div>
+          <div class="comment-container">
+            <!-- Comment Bubble -->
+            <div
+              class="comment-bubble"
+              *ngFor="let comment of comments"
+              style="background-color: #607d8b"
+            >
+              <div class="username">
+                {{ comment.usr_nom }} {{ comment.usr_prenom }}
+                {{ comment.usr_username }}
+              </div>
+              <div class="comment">{{ comment.commentaire }}</div>
+              <div class="date">
+                {{ comment.date | date : "yyyy-MM-dd" }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Button to show input form for each report -->
+          <button
+            mat-button
+            (click)="toggleInputForm(report.transportuser_idreclamation)"
+          >
+            Repondre
+          </button>
+
+          <!-- Conditional Input Form for the message -->
+          <div
+            *ngIf="showInputForms[report.transportuser_idreclamation]"
+            class="input-container"
+          >
+            <!-- Use mat-form-field for Material input style -->
+            <mat-form-field class="message-input" appearance="outline">
+              <textarea
+                matInput
+                [(ngModel)]="newMessages[report.transportuser_idreclamation]"
+                placeholder=""
+              ></textarea>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="sendMessage(report.transportuser_idreclamation)"
+              >
+                <mat-icon>send</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <!-- <button
+    mat-raised-button
+    color="primary"
+    class="mark-read-btn"
+    (click)="markAllAsRead()"
+  >
+    Marque tous comme lus
+  </button> -->
+</div>
+
+<button mat-fab class="fab-button" (click)="historique()">Historiques</button>

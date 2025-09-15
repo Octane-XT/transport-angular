@@ -1,0 +1,80 @@
+<div
+  class="d-flex align-items-center px-3"
+  style="background-color: #393e46; height: 60px; width: 100%; flex-shrink: 0"
+>
+  <h5 class="m-0 text-white">Ajout Agent</h5>
+  <button (click)="closeDialog()" class="close-button">
+    <mat-icon style="color: white">close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Nom</mat-label>
+    <input matInput [(ngModel)]="nom" />
+  </mat-form-field>
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Quartier</mat-label>
+    <input
+      type="text"
+      matInput
+      [matAutocomplete]="typeSelection1"
+      (input)="filterQuartier()"
+      (focus)="filterQuartier()"
+      [(ngModel)]="selectedQuartier"
+      #quartierInput
+    />
+    <mat-autocomplete
+      requireSelection
+      #typeSelection1="matAutocomplete"
+      (optionSelected)="onQuartierSelected($event)"
+      [displayWith]="displayQuartier"
+    >
+      <mat-option *ngFor="let quartier of filteredQuartier" [value]="quartier">
+        {{ quartier.quartier_libelle }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Axe</mat-label>
+    <input
+      type="text"
+      matInput
+      [matAutocomplete]="typeSelection2"
+      (input)="filterAxe()"
+      (focus)="filterAxe()"
+      [(ngModel)]="selectedAxe"
+      #axeInput
+    />
+    <mat-autocomplete
+      requireSelection
+      #typeSelection2="matAutocomplete"
+      (optionSelected)="onAxeSelected($event)"
+      [displayWith]="displayAxe"
+    >
+      <mat-option *ngFor="let axe of filteredAxe" [value]="axe">
+        {{ axe.axe_libelle }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Heure</mat-label>
+    <mat-select [(ngModel)]="selectedHeure">
+      <mat-option *ngFor="let heure of heuresList" [value]="heure">
+        {{ heure.heuretransport_heure }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-stroked-button (click)="onCancel()" style="color: black">
+    Annuler
+  </button>
+  <button
+    mat-stroked-button
+    (click)="onSave()"
+    style="background-color: #393e46; color: white"
+  >
+    Ajouter
+  </button>
+</mat-dialog-actions>

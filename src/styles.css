@@ -1,0 +1,40 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.close-button {
+  position: absolute;
+  /* Absolute positioning to place it in the top-right corner */
+  top: 16px;
+  /* Adjust as needed */
+  right: 16px;
+  /* Adjust as needed */
+  z-index: 1000;
+  /* Ensure it stays above other content */
+  background-color: transparent;
+  /* Make button background transparent */
+  border: none;
+  /* Remove button border */
+  cursor: pointer;
+  /* Change cursor to pointer on hover */
+}
+
+/* Optional: Adjust button icon size */
+.close-button mat-icon {
+  font-size: 24px;
+  /* Adjust size as needed */
+}
+
+.orange-spinner circle {
+  stroke: #393e46 !important;
+}

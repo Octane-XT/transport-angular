@@ -1,0 +1,67 @@
+<div
+  class="d-flex align-items-center px-3"
+  style="background-color: #393e46; height: 60px; width: 100%; flex-shrink: 0"
+>
+  <h5 class="m-0 text-white">Ajout d'Axe</h5>
+  <button (click)="closeDialog()" class="close-button">
+    <mat-icon style="color: white">close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Axe</mat-label>
+    <input
+      type="text"
+      matInput
+      [matAutocomplete]="typeSelection"
+      (input)="filterType()"
+      (focus)="filterType()"
+      [(ngModel)]="selectedAxe"
+      #axeInput
+    />
+    <mat-autocomplete
+      requireSelection
+      #typeSelection="matAutocomplete"
+      (optionSelected)="onAxeSelected($event)"
+      [displayWith]="displayFn"
+    >
+      <mat-option *ngFor="let axe of filteredAxe" [value]="axe">
+        {{ axe.axe_libelle }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Heure</mat-label>
+    <mat-select [(ngModel)]="selectedHeure">
+      <mat-option *ngFor="let heure of heuresList" [value]="heure">
+        {{ heure.heuretransport_heure }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Replaced mat-select with input text for "Car" -->
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Car</mat-label>
+    <input
+      type="text"
+      matInput
+      [(ngModel)]="selectedCar"
+      placeholder="Entrer le numero car"
+    />
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-stroked-button (click)="onCancel()" style="color: black">
+    Annuler
+  </button>
+  <button
+    mat-stroked-button
+    (click)="onSave()"
+    style="background-color: #393e46; color: white"
+  >
+    Modifier
+  </button>
+</mat-dialog-actions>

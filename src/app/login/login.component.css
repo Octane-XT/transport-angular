@@ -1,0 +1,17 @@
+/* Add your custom styles here if needed */
+.div-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.vertical-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.input-100-width {
+  width: 100%;
+}

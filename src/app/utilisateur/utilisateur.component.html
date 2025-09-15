@@ -1,0 +1,84 @@
+<mat-card class="mat-card p-3" appearance="outlined">
+  <mat-card-header
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: -25px;
+    "
+  >
+    <mat-card-title style="width: 400px; display: flex; align-items: center">
+      Utilisateurs
+    </mat-card-title>
+
+    <!-- Search Field -->
+    <div style="margin-top: 25px">
+      <mat-form-field appearance="outline">
+        <mat-label>Recherche</mat-label>
+        <input matInput placeholder="Recherche" (input)="applyFilter($event)" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </mat-card-header>
+
+  <div class="mat-card-content">
+    <!-- Table displaying the user data -->
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-table"
+      appearance="outlined"
+    >
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef>Username</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.usr_username }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nom">
+        <th mat-header-cell *matHeaderCellDef>Nom</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.usr_nom }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="prenom">
+        <th mat-header-cell *matHeaderCellDef>Prenom</th>
+        <td mat-cell *matCellDef="let element">{{ element.usr_prenom }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="quartier">
+        <th mat-header-cell *matHeaderCellDef>Quartier</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.quartier_libelle }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element" style="width: 150px">
+          <button
+            mat-icon-button
+            (click)="edit(element)"
+            style="color: #00447c"
+            [disabled]="element.transportuser_id === null"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <!-- MatPaginator for pagination -->
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements"
+    >
+    </mat-paginator>
+  </div>
+</mat-card>

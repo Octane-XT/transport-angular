@@ -1,0 +1,150 @@
+<mat-card class="mat-card p-3" appearance="outlined">
+  <mat-card-header
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: -25px;
+    "
+  >
+    <mat-card-title style="width: 400px; display: flex; align-items: center">
+      Mes réservations
+    </mat-card-title>
+
+    <!-- Filter Button -->
+    <div class="search-container">
+      <button
+        mat-icon-button
+        color="black"
+        [matMenuTriggerFor]="menu"
+        style="margin-right: 15px"
+      >
+        <mat-icon>filter_alt</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu" class="p-2">
+        <mat-form-field
+          appearance="outline"
+          (click)="$event.stopPropagation()"
+          style="width: 100%"
+        >
+          <mat-label>Heure transport</mat-label>
+          <mat-select [(ngModel)]="selectedHeure">
+            <mat-option *ngFor="let heure of Listheure" [value]="heure">
+              {{ heure.heuretransport_heure }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          (click)="$event.stopPropagation()"
+          style="width: 100%"
+        >
+          <mat-label>Axe</mat-label>
+          <mat-select [(ngModel)]="selectedAxe">
+            <mat-option *ngFor="let axe of Listaxe" [value]="axe">
+              {{ axe.axe_libelle }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button
+          mat-flat-button
+          style="background-color: black"
+          (click)="onValider()"
+        >
+          Valider
+        </button>
+      </mat-menu>
+    </div>
+
+    <!-- Search Field -->
+    <div style="margin-top: 25px">
+      <mat-form-field appearance="outline">
+        <mat-label>Recherche</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Recherche" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </mat-card-header>
+  <div class="mat-card-content">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-table"
+      appearance="outlined"
+    >
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.transportuser_date | date : "yyyy-MM-dd" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="heure">
+        <th mat-header-cell *matHeaderCellDef>Heure</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.heuretransport_heure }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="axe">
+        <th mat-header-cell *matHeaderCellDef>Axe</th>
+        <td mat-cell *matCellDef="let element">{{ element.axe_libelle }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="quartier">
+        <th mat-header-cell *matHeaderCellDef>Quartier</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.transportuser_quartier }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="car">
+        <th mat-header-cell *matHeaderCellDef>Car</th>
+        <td mat-cell *matCellDef="let element">{{ element.heureaxe_car }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element" style="width: 150px">
+          <!-- <button
+            mat-icon-button
+            (click)="edit(element)"
+            style="color: #00447c"
+            [disabled]="element.transportuser_id === null"
+          >
+            <mat-icon>edit</mat-icon>
+          </button> -->
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="openConfirmationDialog(element)"
+            style="color: #db2a48"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements"
+    >
+    </mat-paginator>
+  </div>
+</mat-card>
+
+<button mat-fab class="fab-button" (click)="feedback()">
+  <mat-icon style="color: #db2a48">report</mat-icon>
+</button>
+<button mat-fab class="fab-button2" (click)="myFeedback()">
+  Voir mes réclamations
+</button>
+
+<!-- [matBadge]="notifcount > 0 ? notifcount : null"
+  [ngStyle]="{ '--mat-badge-background-color': 'red' }" -->

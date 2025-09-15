@@ -1,0 +1,46 @@
+<div
+  class="d-flex align-items-center px-3"
+  style="background-color: #393e46; height: 60px; width: 100%; flex-shrink: 0"
+>
+  <h5 class="m-0 text-white">Modification transport</h5>
+  <button (click)="closeDialog()" class="close-button">
+    <mat-icon style="color: white">close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Axe</mat-label>
+    <input
+      type="text"
+      matInput
+      [matAutocomplete]="typeSelection2"
+      (input)="filterAxe()"
+      (focus)="filterAxe()"
+      [(ngModel)]="selectedAxe"
+      #axeInput
+    />
+    <mat-autocomplete
+      requireSelection
+      #typeSelection2="matAutocomplete"
+      (optionSelected)="onAxeSelected($event)"
+      [displayWith]="displayAxe"
+    >
+      <mat-option *ngFor="let axe of filteredAxe" [value]="axe">
+        {{ axe.axe_libelle }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-stroked-button (click)="onCancel()" style="color: black">
+    Annuler
+  </button>
+  <button
+    mat-stroked-button
+    (click)="onSave()"
+    style="background-color: #393e46; color: white"
+  >
+    Modifier
+  </button>
+</mat-dialog-actions>

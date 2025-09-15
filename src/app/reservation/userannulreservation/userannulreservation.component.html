@@ -1,0 +1,26 @@
+<div
+  class="d-flex align-items-center px-3"
+  style="background-color: #393e46; height: 60px; width: 100%; flex-shrink: 0"
+>
+  <h5 class="m-0 text-white">Annuler ma réservation</h5>
+  <button (click)="closeDialog()" class="close-button">
+    <mat-icon style="color: white">close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <div>Êtes-vous certain de vouloir annuler votre réservation ?</div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-stroked-button (click)="onCancel()" style="color: black">
+    Annuler
+  </button>
+  <button
+    mat-stroked-button
+    (click)="onSave()"
+    style="background-color: #e62c2ca6; color: white"
+  >
+    Valider
+  </button>
+</mat-dialog-actions>

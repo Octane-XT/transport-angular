@@ -1,0 +1,22 @@
+.search-container {
+  display: flex;
+  justify-content: flex-end; /* Aligns the search input to the right */
+  width: 100%;
+}
+
+.fab-button {
+  position: fixed;
+  bottom: 20px; /* Distance from the bottom */
+  right: 20px; /* Distance from the right */
+  z-index: 1000; /* Ensure it's above other elements */
+}
+
+.fab-button2 {
+  position: fixed;
+  bottom: 20px; /* Distance from the bottom */
+  right: 90px; /* Distance from the right */
+  z-index: 1000; /* Ensure it's above other elements */
+  width: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
