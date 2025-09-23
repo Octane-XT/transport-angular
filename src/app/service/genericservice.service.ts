@@ -1,16 +1,16 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class GenericService {
-  private url = "http://localhost:3000/transport";
+  private url = 'http://192.168.0.176:3000/transport';
   constructor() {}
 
   async get(path: string) {
     try {
       const response = await fetch(`${this.url}/${path}`, {
-        method: "GET",
+        method: 'GET',
         headers: {
           //Authorization: 'Bearer ' + this.jwtservice.getToken() || '',
         },
@@ -24,7 +24,7 @@ export class GenericService {
   async getById(path: string, id?: number) {
     try {
       const response = await fetch(`${this.url}/${path}/${id}`, {
-        method: "GET",
+        method: 'GET',
         headers: {
           //Authorization: 'Bearer ' + this.jwtservice.getToken() || '',
         },
@@ -39,7 +39,7 @@ export class GenericService {
       const response = await fetch(
         `${this.url}/${path}/${id}/${idHeure}/${idaxe}`,
         {
-          method: "GET",
+          method: 'GET',
           headers: {
             //Authorization: 'Bearer ' + this.jwtservice.getToken() || '',
           },
@@ -60,7 +60,7 @@ export class GenericService {
       const response = await fetch(
         `${this.url}/${path}?current_id=${id}&usercampagne=${usercampagne}&poids=${rolepoids}`,
         {
-          method: "GET",
+          method: 'GET',
           headers: {
             //Authorization: 'Bearer ' + this.jwtservice.getToken() || '',
           },
@@ -74,9 +74,9 @@ export class GenericService {
   async post(path: string, body: any) {
     try {
       const response = await fetch(`${this.url}/${path}`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           //Authorization: 'Bearer ' + this.jwtservice.getToken() || '',
         },
         body: JSON.stringify(body),
@@ -85,7 +85,7 @@ export class GenericService {
         const errorData = await response.json();
         throw new Error(
           `Erreur HTTP ${response.status}: ${
-            errorData.message || "Erreur inconnue"
+            errorData.message || 'Erreur inconnue'
           }`
         );
       }
@@ -99,9 +99,9 @@ export class GenericService {
   async update(path: string, id: number, body: any) {
     try {
       const response = await fetch(`${this.url}/${path}/${id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           //Authorization: 'Bearer ' + this.jwtservice.getToken() || '',
         },
         body: JSON.stringify(body),
@@ -114,7 +114,7 @@ export class GenericService {
   async delete(path: string, id: number) {
     try {
       const response = await fetch(`${this.url}/${path}/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
           // Si vous avez un token, vous pouvez le passer ici
           // Authorization: 'Bearer ' + this.jwtservice.getToken() || '',
@@ -128,7 +128,7 @@ export class GenericService {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Erreur dans la méthode DELETE:", error);
+      console.error('Erreur dans la méthode DELETE:', error);
       throw error;
     }
   }

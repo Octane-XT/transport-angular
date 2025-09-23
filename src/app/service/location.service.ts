@@ -36,7 +36,7 @@ export interface Axe {
   providedIn: 'root',
 })
 export class LocationService {
-  private apiUrl = 'http://localhost:3000/locations';
+  private apiUrl = 'http://192.168.0.176:3000/locations';
 
   constructor(private http: HttpClient) {}
 
@@ -50,7 +50,10 @@ export class LocationService {
         // Extraire les axes uniques à partir des localisations
         const uniqueAxes = Array.from(
           new Map(
-            locations.map((loc) => [loc.axe_id, { axe_id: loc.axe_id, axe_libelle: loc.axe }])
+            locations.map((loc) => [
+              loc.axe_id,
+              { axe_id: loc.axe_id, axe_libelle: loc.axe },
+            ])
           ).values()
         );
         return uniqueAxes;
@@ -63,7 +66,10 @@ export class LocationService {
       map((locations: Location[]) => {
         const uniqueAxes = Array.from(
           new Map(
-            locations.map((loc) => [loc.axe_id, { axe_id: loc.axe_id, axe_libelle: loc.axe }])
+            locations.map((loc) => [
+              loc.axe_id,
+              { axe_id: loc.axe_id, axe_libelle: loc.axe },
+            ])
           ).values()
         );
         return uniqueAxes;
@@ -75,7 +81,11 @@ export class LocationService {
     return this.http.get<string[]>(`${this.apiUrl}/heures`);
   }
 
-  getBusRouteUrl(axe_id: string, heure: string, date: string): Observable<Itinerary[]> {
+  getBusRouteUrl(
+    axe_id: string,
+    heure: string,
+    date: string
+  ): Observable<Itinerary[]> {
     const params = { axe_id, heure, date };
     return this.http.get<Itinerary[]>(`${this.apiUrl}/bus-route`, { params });
   }
@@ -83,5 +93,4 @@ export class LocationService {
   getAllBusRoutes(): Observable<Itinerary[]> {
     return this.http.get<Itinerary[]>(`${this.apiUrl}/all-routes`);
   }
-
 }
