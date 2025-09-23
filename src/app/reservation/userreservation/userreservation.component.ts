@@ -93,7 +93,7 @@ export class UserreservationComponent implements OnInit {
   async ngOnInit() {
     this.getUserReservation();
     this.Listheure = await this.genericService.get('heure');
-    this.Listaxe = await this.genericService.get('axe');
+    this.Listaxe = await this.genericService.get('axes');
     // const notifdata = await this.genericService.getById(
     //   'countreclamations',
     //   Number(this.UserId)
