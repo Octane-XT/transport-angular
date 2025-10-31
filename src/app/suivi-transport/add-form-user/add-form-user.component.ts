@@ -78,7 +78,7 @@ export class AddFormUserComponent {
 
     this.quartiersList = await this.genericservice.get('quartiers');
 
-    this.axesList = await this.genericservice.get('axe');
+    this.axesList = await this.genericservice.get('axes');
     console.log(this.axesList);
 
     this.heuresList = await this.genericservice.get('heure');

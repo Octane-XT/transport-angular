@@ -154,7 +154,7 @@ export class SuiviTransportComponent implements OnInit {
   async loadfilterdata() {
     if (this.Listheure.length == 0 && this.Listaxe.length == 0) {
       this.Listheure = await this.genericService.get('heure');
-      this.Listaxe = await this.genericService.get('axe');
+      this.Listaxe = await this.genericService.get('axes');
     }
   }
 

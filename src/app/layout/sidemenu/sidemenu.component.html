@@ -11,7 +11,7 @@
     <div *ngFor="let group of items; let i = index">
       <mat-expansion-panel
         appearance="outline"
-        [expanded]="expandedPanels[i]"
+        [expanded]="true"
         (opened)="togglePanel(i)"
         (closed)="togglePanel(i)"
         [hideToggle]="close"

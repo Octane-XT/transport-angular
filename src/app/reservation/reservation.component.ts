@@ -42,6 +42,7 @@ import { Router } from '@angular/router';
 import { NotificationService } from '../service/notification.service';
 import { Location } from '@angular/common';
 import * as fr from '@angular/common/locales/fr';
+import { MyquartierComponent } from "./myquartier/myquartier.component";
 
 @Component({
   selector: 'app-reservation',
@@ -59,6 +60,7 @@ import * as fr from '@angular/common/locales/fr';
     MatIconModule,
     MatInputModule,
     MatAutocompleteModule,
+    MyquartierComponent
   ],
   templateUrl: './reservation.component.html',
   styleUrls: ['./reservation.component.css'],
@@ -145,7 +147,7 @@ export class ReservationComponent {
     });
 
     this.quartiersList = (await this.genericservice.get('quartiers')) || [];
-    this.axesList = (await this.genericservice.get('axes')) || [];
+    this.axesList = (await this.genericservice.getById('axe-by-user-quartier', this.myquartier)) || [];
     this.heuresList = (await this.genericservice.get('heure')) || [];
 
     const reservationResponse = await this.genericservice.getById('axetransportday', userId);
@@ -272,15 +274,15 @@ export class ReservationComponent {
   // Filter the list of 'axes' based on user input
   filterAxe(index: number) {
   const filterValue = this.axeInputs.get(index)?.nativeElement.value.toLowerCase() || '';
-  console.log('axesList avant filtrage:', this.axesList);
-  if (!this.axesList || !Array.isArray(this.axesList)) {
-    console.warn('axesList est vide ou non défini');
-    this.filteredAxe = [];
-    return;
-  }
+  //console.log('axesList avant filtrage:', this.axesList);
+  //if (!this.axesList || !Array.isArray(this.axesList)) {
+    //console.warn('axesList est vide ou non défini');
+    //this.filteredAxe = [];
+    //return;
+  //}
   this.filteredAxe = this.axesList.filter(
-    (item: { axe_libelle?: string; axe?: string }) =>
-      (item.axe_libelle || item.axe)?.toLowerCase().includes(filterValue) ?? false
+    (item: { axe_libelle: string}) =>
+      item.axe_libelle.toLowerCase().includes(filterValue)
   );
   console.log('filteredAxe après filtrage:', this.filteredAxe);
 }
@@ -313,32 +315,32 @@ export class ReservationComponent {
   // Method to validate and log reservation values
   async validateReservation() {
   // Vérifier que tous les FormControls sont valides
-  const invalidInputs = this.dateInputs.filter(
-    (input) =>
-      input.heureControl.invalid ||
-      input.quartierControl.invalid ||
-      input.axeControl.invalid
-  );
-  if (invalidInputs.length > 0) {
-    this.notificationService.showError('Veuillez remplir tous les champs requis');
-    return;
-  }
+  //const invalidInputs = this.dateInputs.filter(
+    //(input) =>
+      //input.heureControl.invalid ||
+      //input.quartierControl.invalid ||
+      //input.axeControl.invalid
+  //);
+  //if (invalidInputs.length > 0) {
+    //this.notificationService.showError('Veuillez remplir tous les champs requis');
+    //return;
+  //}
 
   // Construire les données de réservation
   const reservationDetails = {
     dateRange: this.range.value,
     reservations: this.dateInputs.map((input) => ({
       date: this.datePipe.transform(input.date, 'yyyy-MM-dd'),
-      heure: { heuretransport_id: input.heureControl.value },
-      quartier: { quartier_libelle: input.quartierControl.value },
-      // axe: { axe_id: input.axeControl.value },
+      heure: input.heure,
+      quartier: input.quartier,
+      axe: input.axe,
     })),
     transportuser_user: Number(localStorage.getItem('iduser')),
   };
   console.log('Données envoyées:', reservationDetails);
 
   try {
-    await this.genericservice.post('transport/adduser', reservationDetails);
+    await this.genericservice.post('adduser', reservationDetails);
     this.notificationService.showSuccess('Réservation enregistrée');
     this.router.navigate(['./transport/userreservation']);
   } catch (error) {

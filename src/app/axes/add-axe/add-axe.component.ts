@@ -58,7 +58,7 @@ export class AddAxeComponent {
   ) {}
 
   async ngOnInit() {
-    this.axesList = await this.genericservice.get('axe');
+    this.axesList = await this.genericservice.get('axes');
     console.log(this.axesList);
 
     this.heuresList = await this.genericservice.get('heure');

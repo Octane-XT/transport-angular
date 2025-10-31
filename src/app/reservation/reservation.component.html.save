@@ -1,0 +1,248 @@
+<div
+  appearance="outlined"
+  style="width: 500px; margin-left: auto; margin-right: auto; padding: 15px"
+  *ngIf="!myquartier"
+>
+  <h5>Veuillez definir votre quartier dans :</h5>
+  <p>Profile > Definir mon quartier</p
+</div>
+
+<mat-card
+  appearance="outlined"
+  style="width: 500px; margin-left: 50%; transform: translateX(-50%)"
+  *ngIf="myquartier"
+>
+  <mat-card-header>
+    <mat-card-title>Date</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="mt-3">
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Date</mat-label>
+      <mat-date-range-input
+        [formGroup]="range"
+        [rangePicker]="picker"
+        [min]="minDate"
+      >
+        <input matStartDate formControlName="start" placeholder="Date debut" />
+        <input matEndDate formControlName="end" placeholder="Date fin" />
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      <mat-error
+        *ngIf="range.controls['start'].hasError('matStartDateInvalid')"
+      >
+        Date debut invalide
+      </mat-error>
+      <mat-error *ngIf="range.controls['end'].hasError('matEndDateInvalid')">
+        Date fin invalide
+      </mat-error>
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      (click)="generateDateInputs()"
+      class="mt-3"
+      style="background-color: #393e46; color: white"
+    >
+      Valider
+    </button>
+  </mat-card-content>
+</mat-card>
+
+<mat-card
+  appearance="outlined"
+  *ngIf="dateInputs.length > 0"
+  style="width: 100%; margin: 15px 5px 0"
+>
+  <mat-card-header>
+    <mat-card-title>Reservation</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="mt-3">
+    <div *ngFor="let dateInput of dateInputs; let i = index" class="input-row">
+      <mat-form-field appearance="outline" style="flex: 1; margin-right: 8px">
+        <mat-label>{{ dateInput.date | date : "fullDate" }}</mat-label>
+        <input
+          type="text"
+          matInput
+          [matAutocomplete]="typeSelection2"
+          (input)="filterAxe(i)"
+          (focus)="filterAxe(i)"
+          [(ngModel)]="dateInput.axe"
+          #axeInput
+        />
+        <mat-autocomplete
+          requireSelection
+          #typeSelection2="matAutocomplete"
+          (optionSelected)="onAxeSelected($event, i)"
+          [displayWith]="displayAxe"
+        >
+          <mat-option *ngFor="let axe of filteredAxe" [value]="axe">
+            {{ axe.heuretransport_heure }} - {{ axe.axe_libelle }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-icon matPrefix (click)="removeDateInput(i)" style="cursor: pointer"
+          >delete</mat-icon
+        >
+      </mat-form-field>
+    </div>
+
+    <button
+      mat-stroked-button
+      (click)="validateReservation()"
+      color="primary"
+      style="background-color: #393e46; color: white"
+    >
+      Valider
+    </button>
+  </mat-card-content>
+</mat-card>
+
+
+<!-- <mat-card
+  appearance="outlined"
+  style="width: 500px; margin-left: auto; margin-right: auto; padding: 15px"
+  *ngIf="!myquartier"
+>
+  <h5>Veuillez definir votre quartier</h5>
+</mat-card>
+
+<mat-card
+  appearance="outlined"
+  style="width: 500px; margin-left: 50%; transform: translateX(-50%)"
+  *ngIf="myquartier"
+>
+  <mat-card-header>
+    <mat-card-title>Date</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="mt-3">
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Date</mat-label>
+      <mat-date-range-input
+        [formGroup]="range"
+        [rangePicker]="picker"
+        [min]="minDate"
+      >
+        <input matStartDate formControlName="start" placeholder="Date debut" />
+        <input matEndDate formControlName="end" placeholder="Date fin" />
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      <mat-error
+        *ngIf="range.controls['start'].hasError('matStartDateInvalid')"
+      >
+        Date debut invalide
+      </mat-error>
+      <mat-error *ngIf="range.controls['end'].hasError('matEndDateInvalid')">
+        Date fin invalide
+      </mat-error>
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      (click)="generateDateInputs()"
+      class="mt-3"
+      style="background-color: #393e46; color: white"
+    >
+      Valider
+    </button>
+  </mat-card-content>
+</mat-card>
+
+<mat-card
+  appearance="outlined"
+  *ngIf="dateInputs.length > 0"
+  style="width: 100%; margin: 15px 5px 0"
+>
+  <mat-card-header>
+    <mat-card-title>Reservation</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="mt-3">
+    <div *ngFor="let dateInput of dateInputs; let i = index" class="input-row">
+      <mat-form-field appearance="outline" style="flex: 1; margin-right: 8px">
+        <mat-label>Heure {{ dateInput.date | date : "fullDate" }}</mat-label>
+        <mat-select
+          [(ngModel)]="dateInput.heure"
+          [formControl]="dateInput.heureControl"
+        >
+          <mat-option *ngFor="let heure of heuresList" [value]="heure">
+            {{ heure.heuretransport_heure }}
+          </mat-option>
+        </mat-select>
+
+        <mat-icon matPrefix (click)="removeDateInput(i)">delete</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="flex: 1; margin-right: 8px">
+        <mat-label>Quartier</mat-label>
+        <input
+          type="text"
+          matInput
+          [matAutocomplete]="typeSelection1"
+          (input)="filterQuartier(i)"
+          (focus)="filterQuartier(i)"
+          [(ngModel)]="dateInput.quartier"
+          #quartierInput
+        />
+        <mat-autocomplete
+          requireSelection
+          #typeSelection1="matAutocomplete"
+          (optionSelected)="onQuartierSelected($event, i)"
+          [displayWith]="displayQuartier"
+        >
+          <mat-option
+            *ngFor="let quartier of filteredQuartier"
+            [value]="quartier"
+          >
+            {{ quartier.quartier_libelle }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="flex: 1; margin-right: 8px">
+        <mat-label>Axe</mat-label>
+        <input
+          type="text"
+          matInput
+          [matAutocomplete]="typeSelection2"
+          (input)="filterAxe(i)"
+          (focus)="filterAxe(i)"
+          [formControl]="dateInput.axeControl"
+          #axeInput
+        />
+        <mat-autocomplete
+          requireSelection
+          #typeSelection2="matAutocomplete"
+          (optionSelected)="onAxeSelected($event, i)"
+          [displayWith]="displayAxe"
+        >
+          <mat-option *ngIf="filteredAxe.length === 0" disabled>
+            Aucun axe disponible
+          </mat-option>
+          <mat-option *ngFor="let axe of filteredAxe" [value]="axe">
+            {{ axe.axe_libelle }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <button
+      mat-stroked-button
+      (click)="validateReservation()"
+      color="primary"
+      style="background-color: #393e46; color: white"
+    >
+      Valider
+    </button>
+  </mat-card-content>
+</mat-card>
+ -->

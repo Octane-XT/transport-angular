@@ -65,7 +65,7 @@ export class SidemenuComponent implements OnInit {
         },
         {
           label: 'Reclamation',
-          routerLink: ['./reclamation'],
+          routerLink: ['./reclamations'],
           roles: ['Admin'],
           notificationCount: this.notificationCount, // Use the current notificationCount value
         },
@@ -112,9 +112,9 @@ export class SidemenuComponent implements OnInit {
   }
 
   async loadLink() {
-  const roleuser = localStorage.getItem('rolepoids')!;
+  const roleuser = localStorage.getItem('iduser')!;
   
-  if (roleuser >= '3') {
+  if (roleuser == '562'|| roleuser == '238') {
     try {
       const data = await this.genericservice.get('countreclamations');
 
@@ -136,7 +136,7 @@ export class SidemenuComponent implements OnInit {
     icon: group.icon,
     items: group.items.filter((item) => {
       if (item.roles.length === 0) return true;
-      return roleuser >= '3' && item.roles.includes('Admin');
+      return (roleuser == '562' || roleuser == '238') && item.roles.includes('Admin');
     }),
   }));
 

@@ -66,36 +66,31 @@ export class EditQuartierComponent {
   }
 
   async onSave() {
-  const selected = this.selectedQuartier;
-
-  if (!selected || selected.quartier_id === undefined) {
-    this.notificationService.showError('Aucun quartier sélectionné.');
-    return;
+    const data = {
+      quartier_id: this.selectedQuartier.quartier_id,
+    };
+    try {
+      await this.genericService
+        .update('utilisateurs/quartier', this.data.usr_id, data)
+        .then(async (response) => {
+          if (response.success) {
+            this.notificationService.showSuccess(
+              'Votre quartier a bien été défini'
+            );
+            window.location.reload();
+          } else if (response.error) {
+            this.notificationService.showError(
+              'Erreur lors de la définition du quartier'
+            );
+          } else {
+            this.notificationService.showError(
+              'Erreur lors de la définition du quartier'
+            );
+          }
+          this.dialogRef.close();
+        });
+    } catch (error) {}
   }
-
-  const data = {
-    usr_id: Number(localStorage.getItem('iduser')),
-    quartier_id: selected.quartier_id,
-  };
-
-  try {
-    const response = await this.genericService.post('my-quartier', data);
-
-    if (response?.success) {
-      this.notificationService.showSuccess('Votre quartier a bien été défini');
-      this.dialogRef.close();
-      window.location.reload();
-    } else {
-      this.notificationService.showError(
-        response?.error ?? 'Erreur lors de la définition du quartier'
-      );
-      this.dialogRef.close();
-    }
-  } catch (error) {
-    console.error('Erreur lors du post vers my-quartier :', error);
-    this.notificationService.showError('Échec de l’enregistrement du quartier');
-  }
-}
 
 
   onQuartierSelected(event: MatAutocompleteSelectedEvent): void {

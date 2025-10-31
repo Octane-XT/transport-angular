@@ -84,7 +84,7 @@ export class UsermodifreservationComponent implements OnInit {
 
   async ngOnInit() {
     this.Listheure = await this.genericService.get('heure');
-    this.Listaxe = await this.genericService.get('axe');
+    this.Listaxe = await this.genericService.get('axes');
     this.quartiersList = await this.genericService.get('quartiers');
 
     this.typeInput.nativeElement.value = this.data.axe_libelle;

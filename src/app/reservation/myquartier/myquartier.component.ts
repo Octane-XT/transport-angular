@@ -1,11 +1,6 @@
 import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { GenericService } from '../../service/genericservice.service';
 import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
@@ -32,7 +27,6 @@ import { NotificationService } from '../../service/notification.service';
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule,
     MatInputModule,
     MatAutocompleteModule,
   ],
@@ -50,71 +44,74 @@ export class MyquartierComponent {
   @ViewChild('quartierInput') quartierInput!: ElementRef<HTMLInputElement>;
 
   constructor(
-    public dialogRef: MatDialogRef<MyquartierComponent>,
     private genericService: GenericService,
-    private notificationService: NotificationService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    private notificationService: NotificationService
   ) {}
 
   async ngOnInit() {
-  try {
-    const userId = Number(localStorage.getItem('iduser'));
-    const myquartierdata = await this.genericService.getById('my-quartier', userId);
+    try {
+      const userId = Number(localStorage.getItem('iduser'));
+      const myquartierdata = await this.genericService.getById(
+        'my-quartier',
+        userId
+      );
 
-    if (Array.isArray(myquartierdata) && myquartierdata.length > 0 && myquartierdata[0]) {
-      this.myquartier = myquartierdata[0];
-    } else {
-      console.warn('Aucun quartier trouvé pour l’utilisateur :', myquartierdata);
+      if (
+        Array.isArray(myquartierdata) &&
+        myquartierdata.length > 0 &&
+        myquartierdata[0]
+      ) {
+        this.myquartier = myquartierdata[0];
+      } else {
+        console.warn(
+          'Aucun quartier trouvé pour l’utilisateur :',
+          myquartierdata
+        );
+        this.myquartier = null;
+        this.quartiersList = (await this.genericService.get('quartiers')) || [];
+      }
+
+      console.log('Quartier récupéré :', this.myquartier);
+    } catch (error) {
+      console.error('Erreur lors de la récupération du quartier :', error);
       this.myquartier = null;
-      this.quartiersList = (await this.genericService.get('quartiers')) || [];
+      this.quartiersList = [];
     }
-
-    console.log('Quartier récupéré :', this.myquartier);
-  } catch (error) {
-    console.error('Erreur lors de la récupération du quartier :', error);
-    this.myquartier = null;
-    this.quartiersList = [];
-  }
-}
-
-
-  onCancel(): void {
-    this.dialogRef.close();
   }
 
   async onSave() {
-  const selected = this.selectedQuartier;
+    const selected = this.selectedQuartier;
 
-  if (!selected || selected.quartier_id === undefined) {
-    this.notificationService.showError('Aucun quartier sélectionné.');
-    return;
-  }
-
-  const data = {
-    usr_id: Number(localStorage.getItem('iduser')),
-    quartier_id: selected.quartier_id,
-  };
-
-  
-  try {
-    const response = await this.genericService.post('my-quartier', data);
-
-    if (response?.success) {
-      this.notificationService.showSuccess('Votre quartier a bien été défini');
-      this.dialogRef.close();
-      window.location.reload();
-    } else {
-      this.notificationService.showError(
-        response?.error ?? 'Erreur lors de la définition du quartier'
-      );
-      this.dialogRef.close();
+    if (!selected || selected.quartier_id === undefined) {
+      this.notificationService.showError('Aucun quartier sélectionné.');
+      return;
     }
-  } catch (error) {
-    console.error('Erreur lors du post vers my-quartier :', error);
-    this.notificationService.showError('Échec de l’enregistrement du quartier');
-  }
-}
 
+    const data = {
+      usr_id: Number(localStorage.getItem('iduser')),
+      quartier_id: selected.quartier_id,
+    };
+
+    try {
+      const response = await this.genericService.post('my-quartier', data);
+
+      if (response?.success) {
+        this.notificationService.showSuccess(
+          'Votre quartier a bien été défini'
+        );
+        window.location.reload();
+      } else {
+        this.notificationService.showError(
+          response?.error ?? 'Erreur lors de la définition du quartier'
+        );
+      }
+    } catch (error) {
+      console.error('Erreur lors du post vers my-quartier :', error);
+      this.notificationService.showError(
+        'Échec de l’enregistrement du quartier'
+      );
+    }
+  }
 
   onQuartierSelected(event: MatAutocompleteSelectedEvent): void {
     this.selectedQuartier = event.option.value;
@@ -131,8 +128,5 @@ export class MyquartierComponent {
   displayQuartier(quartier: any): string {
     return quartier ? quartier.quartier_libelle : ''; // Adjust based on the structure of the axe object
   }
-
-  closeDialog(): void {
-    this.dialogRef.close();
-  }
 }
+
