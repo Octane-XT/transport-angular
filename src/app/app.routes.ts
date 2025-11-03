@@ -10,6 +10,8 @@ import { ReclamationComponent } from './reclamation/reclamation.component';
 import { UtilisateurComponent } from './utilisateur/utilisateur.component';
 import { LocationTableComponent } from './location-table/location-table.component';
 import { ItineraireViewComponent } from './itineraire-view/itineraire-view.component';
+import { AxesCrudComponent } from './axes/axes-crud/axes-crud.component';
+import { QuartiersCrudComponent } from './quartiers/quartiers-crud/quartiers-crud.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +33,14 @@ export const routes: Routes = [
         component: SuiviTransportComponent,
       },
       {
+        path: 'axes-crud',
+        component: AxesCrudComponent,
+      },
+      {
+        path: 'quartiers-crud',
+        component: QuartiersCrudComponent,
+      },
+      {
         path: 'axes',
         component: AxesComponent,
       },
@@ -50,12 +60,12 @@ export const routes: Routes = [
         path: 'reclamations',
         component: ReclamationComponent,
       },
-      { 
-        path: 'localisation', 
+      {
+        path: 'localisation',
         component: LocationTableComponent,
       },
-      { 
-        path: 'itineraire', 
+      {
+        path: 'itineraire',
         component: ItineraireViewComponent,
       },
     ],

@@ -55,6 +55,16 @@ export class SidemenuComponent implements OnInit {
         },
         {
           label: 'Gestion des axes',
+          routerLink: ['./axes-crud'],
+          roles: ['Admin'],
+        },
+        {
+          label: 'Gestion des quartiers',
+          routerLink: ['./quartiers-crud'],
+          roles: ['Admin'],
+        },
+        {
+          label: 'Gestion des axes/quartiers/cars',
           routerLink: ['./axes'],
           roles: ['Admin'],
         },
@@ -70,12 +80,12 @@ export class SidemenuComponent implements OnInit {
           notificationCount: this.notificationCount, // Use the current notificationCount value
         },
         {
-          label:'Localisation des agents',
+          label: 'Localisation des agents',
           routerLink: ['./localisation'],
           roles: ['Admin'],
         },
         {
-          label:'Itinéraires des bus',
+          label: 'Itinéraires des bus',
           routerLink: ['./itineraire'],
           roles: ['Admin'],
         },
@@ -112,37 +122,43 @@ export class SidemenuComponent implements OnInit {
   }
 
   async loadLink() {
-  const roleuser = localStorage.getItem('iduser')!;
-  
-  if (roleuser == '562'|| roleuser == '238') {
-    try {
-      const data = await this.genericservice.get('countreclamations');
+    const roleuser = localStorage.getItem('iduser')!;
 
-      if (Array.isArray(data) && data.length > 0 && data[0]?.count !== undefined) {
-        this.notificationCount = data[0].count;
-        this.notificationService.updateNotificationCount(data[0].count);
-      } else {
-        console.warn('Données vides ou mal formatées :', data);
+    if (roleuser == '562' || roleuser == '238') {
+      try {
+        const data = await this.genericservice.get('countreclamations');
+
+        if (
+          Array.isArray(data) &&
+          data.length > 0 &&
+          data[0]?.count !== undefined
+        ) {
+          this.notificationCount = data[0].count;
+          this.notificationService.updateNotificationCount(data[0].count);
+        } else {
+          console.warn('Données vides ou mal formatées :', data);
+          this.notificationCount = 0;
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des réclamations :', error);
         this.notificationCount = 0;
       }
-    } catch (error) {
-      console.error('Erreur lors du chargement des réclamations :', error);
-      this.notificationCount = 0;
     }
+
+    const accessibleItems = this.menuItems.map((group) => ({
+      category: group.category,
+      icon: group.icon,
+      items: group.items.filter((item) => {
+        if (item.roles.length === 0) return true;
+        return (
+          (roleuser == '562' || roleuser == '238') &&
+          item.roles.includes('Admin')
+        );
+      }),
+    }));
+
+    this.items = accessibleItems.filter((group) => group.items.length > 0);
   }
-
-  const accessibleItems = this.menuItems.map((group) => ({
-    category: group.category,
-    icon: group.icon,
-    items: group.items.filter((item) => {
-      if (item.roles.length === 0) return true;
-      return (roleuser == '562' || roleuser == '238') && item.roles.includes('Admin');
-    }),
-  }));
-
-  this.items = accessibleItems.filter((group) => group.items.length > 0);
-}
-
 
   togglePanel(index: number) {
     this.expandedPanels[index] = !this.expandedPanels[index];

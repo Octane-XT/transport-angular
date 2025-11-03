@@ -1,19 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { GenericService } from '../../service/genericservice.service';
 
@@ -35,17 +31,15 @@ import { GenericService } from '../../service/genericservice.service';
   styleUrl: './add-axe.component.css',
 })
 export class AddAxeComponent {
-  // Static list of axes
-  axesList: any;
+  // List of axes, heures, and cars
+  axesList: any[] = [];
   filteredAxe: any[] = [];
+  heuresList: any[] = [];
 
-  // Static list of heures (hours)
-  heuresList: any;
-
-  // Static list of cars (vehicles)
+  // Static list of cars (can be dynamic if needed)
   carsList: string[] = ['Car 1', 'Car 2', 'Car 3', 'Car 4'];
 
-  // The currently selected axe, heure, and car (passed from the parent)
+  // Selected values
   selectedAxe!: string;
   selectedHeure!: string;
   selectedCar!: string;
@@ -57,26 +51,46 @@ export class AddAxeComponent {
     private genericservice: GenericService
   ) {}
 
+  // Load data when component initializes
   async ngOnInit() {
-    this.axesList = await this.genericservice.get('axes');
-    console.log(this.axesList);
+    try {
+      // ✅ Extract actual arrays from API responses
+      const axesResponse = await this.genericservice.get('axes');
+      this.axesList = Array.isArray(axesResponse.data) ? axesResponse.data : [];
 
-    this.heuresList = await this.genericservice.get('heure');
-    console.log(this.heuresList);
+      const heuresResponse = await this.genericservice.get('heure');
+      this.heuresList = Array.isArray(heuresResponse.data)
+        ? heuresResponse.data
+        : [];
+
+      console.log('Axes:', this.axesList);
+      console.log('Heures:', this.heuresList);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
 
+  // Filter axes for autocomplete
   filterType() {
     const filterValue = this.typeInput.nativeElement.value.toLowerCase();
+    if (!Array.isArray(this.axesList)) return;
+
     this.filteredAxe = this.axesList.filter((item: { axe_libelle: string }) =>
       item.axe_libelle.toLowerCase().includes(filterValue)
     );
   }
-  // This will be triggered when an axe is selected in the autocomplete
+
+  // Triggered when an axe is selected
   onAxeSelected(event: MatAutocompleteSelectedEvent): void {
     this.selectedAxe = event.option.value;
   }
 
-  // Close the dialog with the selected axe, heure, and car
+  // Display axe name in the autocomplete
+  displayFn(axe: any): string {
+    return axe ? axe.axe_libelle : '';
+  }
+
+  // Save and close the dialog
   onSave(): void {
     this.dialogRef.close({
       axe: this.selectedAxe,
@@ -85,15 +99,12 @@ export class AddAxeComponent {
     });
   }
 
-  displayFn(axe: any): string {
-    return axe ? axe.axe_libelle : ''; // Adjust based on the structure of the axe object
-  }
-
-  // Close the dialog without saving
+  // Close without saving
   onCancel(): void {
     this.dialogRef.close();
   }
 
+  // Explicit close button handler
   closeDialog(): void {
     this.dialogRef.close();
   }

@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit quartier' : 'Create quartier' }}</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  style="padding: 8px 24px 24px; display: block"
+>
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Label (optional)</mat-label>
+    <input matInput formControlName="quartier_libelle" maxlength="255" />
+    <mat-error *ngIf="form.get('quartier_libelle')?.hasError('maxlength')">
+      Max length is 255
+    </mat-error>
+  </mat-form-field>
+
+  <div
+    style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px"
+  >
+    <button mat-button type="button" (click)="close()">Cancel</button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid || busy"
+    >
+      {{ busy ? 'Saving…' : (isEdit ? 'Save' : 'Create') }}
+    </button>
+  </div>
+</form>
