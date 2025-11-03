@@ -58,10 +58,8 @@ export class AddAxeComponent {
       const axesResponse = await this.genericservice.get('axes');
       this.axesList = Array.isArray(axesResponse.data) ? axesResponse.data : [];
 
-      const heuresResponse = await this.genericservice.get('heure');
-      this.heuresList = Array.isArray(heuresResponse.data)
-        ? heuresResponse.data
-        : [];
+      this.heuresList = await this.genericservice.get('heure');
+      console.log(this.heuresList);
 
       console.log('Axes:', this.axesList);
       console.log('Heures:', this.heuresList);
