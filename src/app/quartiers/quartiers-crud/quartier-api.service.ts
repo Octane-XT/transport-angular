@@ -6,7 +6,7 @@ import { Quartier } from './quartier.model';
 
 @Injectable({ providedIn: 'root' })
 export class QuartierApiService {
-  private readonly base = 'http://localhost:3000/transport/quartiers';
+  private readonly base = 'http://192.168.0.176:3000/transport/quartiers';
 
   constructor(private http: HttpClient) {}
 

@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AxeApiService {
-  private readonly base = 'http://localhost:3000/transport/axes';
+  private readonly base = 'http://192.168.0.176:3000/transport/axes';
 
   constructor(private http: HttpClient) {}
 

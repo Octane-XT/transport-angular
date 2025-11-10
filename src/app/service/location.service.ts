@@ -36,7 +36,7 @@ export interface Axe {
   providedIn: 'root',
 })
 export class LocationService {
-  private apiUrl = 'http://localhost:3000/locations';
+  private apiUrl = 'http://192.168.0.176:3000/locations';
 
   constructor(private http: HttpClient) {}
 
