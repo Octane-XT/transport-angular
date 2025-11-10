@@ -22,6 +22,7 @@
       color="primary"
       type="submit"
       [disabled]="form.invalid || busy"
+      (click)="submit()"
     >
       {{ busy ? 'Saving…' : (isEdit ? 'Save' : 'Create') }}
     </button>

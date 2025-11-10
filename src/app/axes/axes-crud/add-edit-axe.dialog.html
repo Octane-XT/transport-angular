@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{ isEdit ? 'Edit axe' : 'Create axe' }}</h2>
 
-<form (ngSubmit)="submit()" style="padding: 8px 24px 24px; display: block">
+<div style="padding: 8px 24px 24px; display: block">
   <mat-form-field appearance="outline" style="width: 100%">
     <mat-label>Label</mat-label>
     <input matInput [formControl]="form.controls.axe_libelle" maxlength="255" />
@@ -19,8 +19,9 @@
       color="primary"
       type="submit"
       [disabled]="form.invalid || busy"
+      (click)="submit()"
     >
       {{ busy ? 'Saving…' : (isEdit ? 'Save' : 'Create') }}
     </button>
   </div>
-</form>
+</div>
