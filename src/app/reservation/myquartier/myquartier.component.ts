@@ -68,7 +68,14 @@ export class MyquartierComponent {
           myquartierdata
         );
         this.myquartier = null;
-        this.quartiersList = (await this.genericService.get('quartiers')) || [];
+
+        const res = await this.genericService.get('quartiers');
+        console.log("res",res);
+        // IMPORTANT: use res.data, not res
+        this.quartiersList = Array.isArray(res?.data) ? res.data : [];
+        console.log("qq",this.quartiersList);
+        
+        this.filteredQuartier = [...this.quartiersList]; // show all by default
       }
 
       console.log('Quartier récupéré :', this.myquartier);
@@ -76,6 +83,7 @@ export class MyquartierComponent {
       console.error('Erreur lors de la récupération du quartier :', error);
       this.myquartier = null;
       this.quartiersList = [];
+      this.filteredQuartier = [];
     }
   }
 
@@ -118,15 +126,28 @@ export class MyquartierComponent {
   }
 
   filterQuartier() {
-    const filterValue = this.quartierInput.nativeElement.value.toLowerCase();
-    this.filteredQuartier = this.quartiersList.filter(
-      (item: { quartier_libelle: string }) =>
-        item.quartier_libelle.toLowerCase().includes(filterValue)
-    );
+  const value = this.quartierInput?.nativeElement.value || '';
+  const filterValue = value.toLowerCase();
+
+  if (!Array.isArray(this.quartiersList)) {
+    this.filteredQuartier = [];
+    return;
   }
+
+  if (!filterValue) {
+    // If input is empty, show all quartiers
+    this.filteredQuartier = [...this.quartiersList];
+    return;
+  }
+
+  this.filteredQuartier = this.quartiersList.filter(
+    (item: { quartier_libelle: string }) =>
+      item.quartier_libelle.toLowerCase().includes(filterValue)
+  );
+}
+
 
   displayQuartier(quartier: any): string {
     return quartier ? quartier.quartier_libelle : ''; // Adjust based on the structure of the axe object
   }
 }
-

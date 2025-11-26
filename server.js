@@ -110,7 +110,7 @@ app.get(baseRegex, (_req, res) => {
 app.listen(PORT, () => {
   console.log('✅ Serving Angular from:', distPath);
   console.log('🧭 Base href:', BASE_HREF);
-  console.log(`👉 Open: http://192.168.0.176:${PORT}${BASE_HREF === '/' ? '' : BASE_HREF + '/'}`);
+  console.log(`👉 Open: http://localhost:${PORT}${BASE_HREF === '/' ? '' : BASE_HREF + '/'}`);
 });
 
 /*

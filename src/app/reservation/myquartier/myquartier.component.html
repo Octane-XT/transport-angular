@@ -7,24 +7,24 @@
 <mat-form-field appearance="outline" style="width: 100%" *ngIf="!myquartier">
   <mat-label>Quartier</mat-label>
   <input
-    type="text"
-    matInput
-    [matAutocomplete]="typeSelection1"
-    (input)="filterQuartier()"
-    (focus)="filterQuartier()"
-    [(ngModel)]="selectedQuartier"
-    #quartierInput
-  />
-  <mat-autocomplete
-    requireSelection
-    #typeSelection1="matAutocomplete"
-    (optionSelected)="onQuartierSelected($event)"
-    [displayWith]="displayQuartier"
-  >
-    <mat-option *ngFor="let quartier of filteredQuartier" [value]="quartier">
-      {{ quartier.quartier_libelle }}
-    </mat-option>
-  </mat-autocomplete>
+  type="text"
+  matInput
+  [matAutocomplete]="typeSelection1"
+  (input)="filterQuartier()"
+  (focus)="filterQuartier()"
+  [(ngModel)]="selectedQuartier"
+  #quartierInput
+/>
+<mat-autocomplete
+  requireSelection
+  #typeSelection1="matAutocomplete"
+  (optionSelected)="onQuartierSelected($event)"
+  [displayWith]="displayQuartier"
+>
+  <mat-option *ngFor="let quartier of filteredQuartier" [value]="quartier">
+    {{ quartier.quartier_libelle }}
+  </mat-option>
+</mat-autocomplete>
 </mat-form-field>
 
 <button
