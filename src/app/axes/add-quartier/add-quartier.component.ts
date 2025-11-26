@@ -60,14 +60,25 @@ export class AddQuartierComponent {
   ) {}
 
   async ngOnInit() {
-    // Fetch quartiers from the service
-    this.quartiersList = await this.genericservice.get('quartiers');
-    console.log(this.data);
-    this.selectedQuartiers = this.data.listquartieraxe;
-    if (!this.selectedQuartiers) {
-      this.selectedQuartiers = [];
-    }
+  const res = await this.genericservice.get('quartiers');
+  console.log('API response:', res);
+
+  // Extract the real array safely:
+  if (Array.isArray(res)) {
+    this.quartiersList = res;
+  } else if (Array.isArray(res.data)) {
+    this.quartiersList = res.data;
+  } else if (Array.isArray(res.result)) {
+    this.quartiersList = res.result;
+  } else if (Array.isArray(res.quartiers)) {
+    this.quartiersList = res.quartiers;
+  } else {
+    this.quartiersList = []; // fallback to avoid crash
   }
+
+  this.selectedQuartiers = this.data.listquartieraxe || [];
+}
+
 
   // Add quartier to the chip list
   addQuartier(event: any): void {
@@ -111,13 +122,18 @@ export class AddQuartierComponent {
   }
 
   filteredQuartiers() {
-    const filterValue = this.currentQuartier.toLowerCase();
-    return this.quartiersList.filter(
-      (f) =>
-        f.quartier_libelle.toLowerCase().includes(filterValue) &&
-        !this.selectedQuartiers.includes(f) // Exclude already selected fournisseurs
-    );
+  if (!Array.isArray(this.quartiersList)) {
+    return [];
   }
+
+  const filterValue = this.currentQuartier.toLowerCase();
+  return this.quartiersList.filter(
+    (f) =>
+      f.quartier_libelle.toLowerCase().includes(filterValue) &&
+      !this.selectedQuartiers.includes(f)
+  );
+}
+
 
   // Save the selected quartiers and close the dialog
   // Composant Angular
