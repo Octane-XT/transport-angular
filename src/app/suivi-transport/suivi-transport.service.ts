@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class SuiviTransportService {
-  private url = 'http://localhost:3000/transport/suivi';
-  private urlFiltre = 'http://localhost:3000/transport/suiviFiltre';
-  private urlexport = 'http://localhost:3000/transport/exportdata';
+  private url = 'http://192.168.0.176:3000/transport/suivi';
+  private urlFiltre = 'http://192.168.0.176:3000/transport/suiviFiltre';
+  private urlexport = 'http://192.168.0.176:3000/transport/exportdata';
 
   constructor() {}
 
@@ -107,7 +107,7 @@ export class SuiviTransportService {
     id: number,
     selectedQuartiers: string[]
   ): Promise<any> {
-    const url = `http://localhost:3000/transport/insert-assign-quartier-axe/${id}`;
+    const url = `http://192.168.0.176:3000/transport/insert-assign-quartier-axe/${id}`;
     const data = selectedQuartiers;
 
     try {

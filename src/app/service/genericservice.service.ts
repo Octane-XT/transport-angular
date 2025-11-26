@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class GenericService {
-  private url = 'http://localhost:3000/transport';
+  private url = 'http://192.168.0.176:3000/transport';
   constructor() {}
 
   async get(path: string) {
