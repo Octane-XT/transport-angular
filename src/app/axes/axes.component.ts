@@ -73,6 +73,43 @@ export class AxesComponent implements OnInit {
     console.log(this.listquartier);
   }
 
+ editAxe(item: any) {
+  const dialogRef = this.dialog.open(AddAxeComponent, {
+    width: '500px',
+    data: {
+      mode: 'edit',
+      heureaxeId: item.heureaxe_id,     // relation id
+      axeId: item.heureaxe_axe,         // 🔴 use the FK from listaxequartier
+      heureId: item.heureaxe_heure,     // 🔴 use the FK from listaxequartier
+      car: item.heureaxe_car,
+    },
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result) {
+      const body = {
+        heureaxe_axe: result.axe.axe_id,
+        heureaxe_heure: result.heure.heuretransport_id,
+        heureaxe_car: result.car,
+      };
+
+      this.genericservice
+        .update('update-axetransport', item.heureaxe_id, body)
+        .then(() => {
+          this.notificationService.showSuccess('Axe modifié avec succès');
+          this.loadListAxeQuartier();
+        })
+        .catch(() => {
+          this.notificationService.showError(
+            'Erreur lors de la modification de l’axe'
+          );
+        });
+    }
+  });
+}
+
+
+
   async loadListAxeQuartier() {
     this.isLoading = true;
     this.listaxequartier = await this.genericservice.get('listaxequartier');

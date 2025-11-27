@@ -100,6 +100,7 @@ export class ReservationComponent {
   minDate: Date = new Date();
 
   myquartier: any;
+  myquartierdata: any;
 
   constructor(
     private genericservice: GenericService,
@@ -127,6 +128,7 @@ export class ReservationComponent {
     const myquartierdata = await this.genericservice.getById('my-quartier', userId);
     if (Array.isArray(myquartierdata) && myquartierdata[0]?.quartier_id !== undefined) {
       this.myquartier = myquartierdata[0].quartier_id;
+      this.myquartierdata = myquartierdata[0];
     } else {
       console.warn('quartier_id non défini ou données absentes :', myquartierdata);
       this.myquartier = null;
@@ -332,7 +334,7 @@ export class ReservationComponent {
     reservations: this.dateInputs.map((input) => ({
       date: this.datePipe.transform(input.date, 'yyyy-MM-dd'),
       heure: input.heure,
-      quartier: input.quartier,
+      quartier: this.myquartierdata,
       axe: input.axe,
     })),
     transportuser_user: Number(localStorage.getItem('iduser')),
